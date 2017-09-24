@@ -14,6 +14,9 @@ call vundle#begin('$VIM/vimfiles/bundle/')
     Plugin 'ctrlpvim/ctrlp.vim'
     Plugin 'scrooloose/nerdtree'
     Plugin 'scrooloose/nerdcommenter'
+    "Plugin 'python-mode/python-mode'
+    "Plugin 'davidhalter/jedi-vim'
+    Plugin 'fatih/vim-go'
 call vundle#end()
 filetype plugin indent on 
 
@@ -45,7 +48,7 @@ endfunction
 autocmd! bufwritepost .vimrc source %
 
 set colorcolumn=80
-set guifont=Consolas:h10
+set guifont=Fira\ Code\ Retina:h10
 set is
 set hls
 set ic
@@ -99,10 +102,10 @@ noremap <C-n> :nohl<CR>
 vnoremap <C-n> :nohl<CR>
 inoremap <C-n> :nohl<CR>
 
-noremap <Up> <nop>
-noremap <Down> <nop>
-noremap <Left> <nop>
-noremap <Right> <nop>
+"noremap <Up> <nop>
+"noremap <Down> <nop>
+"noremap <Left> <nop>
+"noremap <Right> <nop>
 
 " bind Ctrl+<movement> keys to move around the windows, instead of using Ctrl+w + <movement>
 " Every unnecessary keystroke that can be saved is good for your health :)
@@ -125,3 +128,42 @@ vnoremap > >gv  " better indentation
 set nobackup
 set nowritebackup
 set noswapfile
+
+"""""
+
+
+if has("unix")
+    function! FontSizePlus ()
+      let l:gf_size_whole = matchstr(&guifont, '\( \)\@<=\d\+$')
+      let l:gf_size_whole = l:gf_size_whole + 1
+      let l:new_font_size = ' '.l:gf_size_whole
+      let &guifont = substitute(&guifont, ' \d\+$', l:new_font_size, '')
+    endfunction
+
+    function! FontSizeMinus ()
+      let l:gf_size_whole = matchstr(&guifont, '\( \)\@<=\d\+$')
+      let l:gf_size_whole = l:gf_size_whole - 1
+      let l:new_font_size = ' '.l:gf_size_whole
+      let &guifont = substitute(&guifont, ' \d\+$', l:new_font_size, '')
+    endfunction
+else
+    function! FontSizePlus ()
+      let l:gf_size_whole = matchstr(&guifont, '\(:h\)\@<=\d\+$')
+      let l:gf_size_whole = l:gf_size_whole + 1
+      let l:new_font_size = ':h'.l:gf_size_whole
+      let &guifont = substitute(&guifont, ':h\d\+$', l:new_font_size, '')
+    endfunction
+
+    function! FontSizeMinus ()
+      let l:gf_size_whole = matchstr(&guifont, '\(:h\)\@<=\d\+$')
+      let l:gf_size_whole = l:gf_size_whole - 1
+      let l:new_font_size = ':h'.l:gf_size_whole
+      let &guifont = substitute(&guifont, ':h\d\+$', l:new_font_size, '')
+    endfunction
+endif
+
+
+if has("gui_running")
+    nmap <S-F12> :call FontSizeMinus()<CR>
+    nmap <F12> :call FontSizePlus()<CR>
+endif
