@@ -1,0 +1,175 @@
+chdir ~/Dropbox/words
+
+set nocompatible              " be iMproved, required
+filetype off                  " required
+
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+    Plugin 'morhetz/gruvbox'
+
+    Plugin 'VundleVim/Vundle.vim'
+    Plugin 'scrooloose/nerdtree'
+    Plugin 'reedes/vim-pencil' " Super-powered writing things
+    Plugin 'tpope/vim-abolish' " Fancy abbreviation replacements
+    Plugin 'junegunn/limelight.vim' " Highlights only active paragraph
+    Plugin 'junegunn/goyo.vim' " Full screen writing mode
+    Plugin 'reedes/vim-lexical' " Better spellcheck mappings
+    Plugin 'reedes/vim-litecorrect' " Better autocorrections
+    Plugin 'reedes/vim-textobj-sentence' " Treat sentences as text objects
+    Plugin 'reedes/vim-wordy' " Weasel words and passive voice
+    Plugin 'godlygeek/tabular'
+    Plugin 'plasticboy/vim-markdown'
+    Plugin 'iamcco/markdown-preview.nvim'
+
+    Plugin 'vim-airline/vim-airline'
+    Plugin 'vim-airline/vim-airline-themes'
+    Plugin 'ctrlpvim/ctrlp.vim'
+
+    Plugin 'altercation/vim-colors-solarized'
+    "Plugin 'morhetz/gruvbox'
+call vundle#end()            " required
+filetype plugin indent on    " required
+
+""""""""""""
+
+let NERDTreeQuitOnOpen = 0
+nnoremap <Leader>d :let NERDTreeQuitOnOpen = 1<bar>NERDTreeToggle<CR>
+nnoremap <Leader>D :let NERDTreeQuitOnOpen = 0<bar>NERDTreeToggle<CR>
+
+call togglebg#map("<F5>")
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_cmd = 'CtrlP'
+let g:airline#extensions#tabline#enabled = 1
+let g:airline_theme='gruvbox'
+
+augroup pencil
+   autocmd!
+   autocmd filetype markdown,mkd call pencil#init()
+                             \ | call lexical#init()
+                             \ | call litecorrect#init()
+                             \ | setl spell spl=en_us fdl=4 noru nonu nornu
+                             \ | setl fdo+=search
+                            " \ | textobj#quote#init()
+                            " \ | textobj#sentence#init()
+augroup END
+
+" Pencil / Writing Controls {{{
+   let g:pencil#wrapModeDefault = 'soft'
+   let g:pencil#textwidth = 74
+   let g:pencil#joinspaces = 0
+   let g:pencil#cursorwrap = 1
+   let g:pencil#conceallevel = 3
+   let g:pencil#concealcursor = 'c'
+   let g:pencil#softDetectSample = 20
+   let g:pencil#softDetectThreshold = 130
+" }}}
+
+" set to 1, nvim will open the preview window after entering the markdown buffer
+" default: 0
+let g:mkdp_auto_start = 0
+
+" set to 1, the nvim will auto close current preview window when change
+" from markdown buffer to another buffer
+" default: 1
+let g:mkdp_auto_close = 1
+
+" set to 1, the vim will refresh markdown when save the buffer or
+" leave from insert mode, default 0 is auto refresh markdown as you edit or
+" move the cursor
+" default: 0
+let g:mkdp_refresh_slow = 0
+
+" set to 1, the MarkdownPreview command can be use for all files,
+" by default it can be use in markdown file
+" default: 0
+let g:mkdp_command_for_global = 0
+
+" set to 1, preview server available to others in your network
+" by default, the server listens on localhost (127.0.0.1)
+" default: 0
+let g:mkdp_open_to_the_world = 0
+
+" use custom IP to open preview page
+" useful when you work in remote vim and preview on local browser
+" more detail see: https://github.com/iamcco/markdown-preview.nvim/pull/9
+" default empty
+let g:mkdp_open_ip = ''
+
+" specify browser to open preview page
+" default: ''
+let g:mkdp_browser = 'Brave'
+
+" set to 1, echo preview page url in command line when open preview page
+" default is 0
+let g:mkdp_echo_preview_url = 0
+
+" a custom vim function name to open preview page
+" this function will receive url as param
+" default is empty
+let g:mkdp_browserfunc = ''
+
+" options for markdown render
+" mkit: markdown-it options for render
+" katex: katex options for math
+" uml: markdown-it-plantuml options
+" maid: mermaid options
+" disable_sync_scroll: if disable sync scroll, default 0
+" sync_scroll_type: 'middle', 'top' or 'relative', default value is 'middle'
+"   middle: mean the cursor position alway show at the middle of the preview page
+"   top: mean the vim top viewport alway show at the top of the preview page
+"   relative: mean the cursor position alway show at the relative positon of the preview page
+" hide_yaml_meta: if hide yaml metadata, default is 1
+" sequence_diagrams: js-sequence-diagrams options
+let g:mkdp_preview_options = {
+    \ 'mkit': {},
+    \ 'katex': {},
+    \ 'uml': {},
+    \ 'maid': {},
+    \ 'disable_sync_scroll': 0,
+    \ 'sync_scroll_type': 'middle',
+    \ 'hide_yaml_meta': 1,
+    \ 'sequence_diagrams': {}
+    \ }
+
+" use a custom markdown style must be absolute path
+let g:mkdp_markdown_css = ''
+
+" use a custom highlight style must absolute path
+let g:mkdp_highlight_css = ''
+
+" use a custom port to start server or random for empty
+let g:mkdp_port = ''
+
+" preview page title
+" ${name} will be replace with the file name
+let g:mkdp_page_title = '「${name}」'
+
+
+""""""""""""
+
+syntax enable
+set background=dark
+"colorscheme solarized
+colorscheme gruvbox
+
+set guifont=Monaco:h14
+set is
+set hls
+set ic
+syntax on
+set autoindent
+set smartindent
+set shiftwidth=4
+set tabstop=4
+set expandtab
+set smarttab
+set wildmenu
+
+" To insert timestamp, press F3.
+nmap <F3> a<C-R>=strftime("%Y-%m-%d %a %I:%M %p")<CR><Esc>
+imap <F3> <C-R>=strftime("%Y-%m-%d %a %I:%M %p")<CR>
+
+"set showmode
+"set visualbell
+"set shortmess+=I
+"set laststatus=2
